@@ -1,16 +1,13 @@
 Spring Dynamic Routing Database
 
 ## Introduction
-최근에 어떤 어플리케이션을 만들면서 겪은 일입니다.
-조직이나 그룹별로 서로 다른 Database 에 접근해야 했습니다. 걔다가 그 조직이 A, B, C 이렇게 Predefine 할 수 있는게
-아니라 동적으로 증가할 수 있었습니다. 결국 사용자별 DB 요청시에 Datasource 연결을 달리 해야하는 이슈가 있었는데 다행이도 스프링에서는
-위 문제를 해결할수 있는 추상 클래스를 제공하고 있었습니다. 이 글에서는 간단한 코드로 Spring 에서 런타임시 동적으로 Datasource 를 결정하는 방법을 알아 보겠습니다.
+최근에 어떤 애플리케이션을 만들면서 겪은 일입니다. 조직이나 그룹별로 서로 다른 Database 에 접근해야 했습니다. 걔다가 그 조직은 동적으로 증가할 수 있었기 때문에 Predefine 할 수 없었습니다. 결국 사용자별 DB 요청 시에 Datasource 연결을 달리 해야 하는 이슈가 있었는데 다행도 스프링에서는 위 문제를 해결할 수 있는 추상 클래스를 제공하고 있었습니다. 이 글에서는 간단한 코드로 Spring에서 런타임 시 동적으로 Datasource를 결정하는 방법을 알아보겠습니다.
 
 
 ## 구성
 
 ### build.gradle
-
+최신 버전의 spring boot 와 mybatis, mysql connector 등의 dependency를 포함하고 있는 간단한 build.gradle 파일입니다.
 
 ### 데이터베이스
 테스트할 데이터베이스는 MySQL 로 하였습니다. 물론 어느 DB도 상관 없습니다. 하지만 최소 2개이상의 DB가 있어야지 테스트 해볼수 있겠죠
@@ -25,8 +22,8 @@ insert into route_test value ('this is db_02');
 
 ### MyRoutingDataSource
 Spring 에서 제공하는 AbstractRoutingDataSource 클래스를 상속받은 클래스입니다. AbstractRoutingDataSource 에는  determineCurrentLookupKey라는 추상 메소드가 
-존재하는데 이름에서 알수 있듯이 현재 요청의 연결할 Datasource 를 결정할 Key 값을 리턴합니다. 해당 메소드를 MyRoutingDataSource 구현하고 있습니다. 
-이 글에서는 로그인 세션의 정보를 조회해서 선택한 DB Key 를 넘겨주고 있습니다.
+존재하는데 이름에서 알수 있듯이 현재 요청의 연결할 Datasource 를 결정할 Key 값을 리턴합니다. MyRoutingDataSource 구현하고 있는 해당 메소드를 살펴보면
+로그인 세션의 정보를 조회해서 선택한 DB Key 를 넘겨주고 있습니다.
 
 
 ### DatabaseConfig
