@@ -8,7 +8,7 @@
 
 최신 버전의 spring boot 와 mybatis, mysql connector 등의 dependency 포함하고 있는 간단한 build.gradle 파일입니다.
 
-```
+```gradle
 plugins {
     id 'org.springframework.boot' version '2.1.8.RELEASE'
     id 'io.spring.dependency-management' version '1.0.8.RELEASE'
@@ -37,7 +37,7 @@ dependencies {
 
 테스트할 데이터베이스는 MySQL로 하였습니다. 물론 어느 DB도 상관없습니다. 하지만 최소 2개 이상의 DB가 있어야지 테스트 해볼수 있겠죠 여기서는 같은 IP, Port를 같는 2개의 Database를 만들어서 테스트했습니다. 각각의 DB에 테이블을 생성하고 해당 테이블에 데이터를 입력합니다.
 
-```
+```sql
 create table route_test
 (
 	db_name varchar(255) null
@@ -51,7 +51,7 @@ insert into route_test value ('this is db_02');
 
 Spring에서 제공하는 AbstractRoutingDataSource 클래스를 상속받은 클래스입니다. AbstractRoutingDataSource 에는 determineCurrentLookupKey라는 추상 메서드가 존재하는데 이름에서 알 수 있듯이 현재 요청의 연결할 Datasource를 결정할 Key 값을 리턴합니다. MyRoutingDataSource 구현하고 있는 determineCurrentLookupKey 메서드를 살펴보면 로그인 세션의 정보를 조회해서 선택한 DB Key를 넘겨주고 있습니다.
 
-```
+```java
 package info.m2sj.springrouterdatasource;
 
 import org.springframework.jdbc.datasource.lookup.AbstractRoutingDataSource;
@@ -75,7 +75,7 @@ public class MyRoutingDataSource extends AbstractRoutingDataSource {
 
 Datasource Bean 을 생성하는 Configuration 클래스입니다. 일반적인 Datasource가 아닌 MyRoutingDataSource 를 생성해서 리턴하고있습니다. 결국 MyRoutingDataSource 여러개의 Datasource 객체를 Key, Value 형태로 담고 있고 determineCurrentLookupKey라는 메소드에서 리턴하는 Key 값과 매칭되는 Datasource 객체를 반환하게됩니다.
 
-```
+```java
 package info.m2sj.springrouterdatasource;
 
 import org.springframework.context.annotation.Bean;
@@ -123,7 +123,7 @@ public class DatabaseConfig {
 
 annotation 을 이용한 간단한 mybatis mapper 클래스입니다.
 
-```
+```java
 package info.m2sj.springrouterdatasource;
 
 import org.apache.ibatis.annotations.Mapper;
@@ -142,7 +142,7 @@ public interface MyMapper {
 Spring Boot run 클래스입니다. 코드를 간단히 하기 위해서 Controller를 포함하고 있습니다. 각각 URI 맵핑 메소드 안에서  
 서로 다른 DB Key를 세션에 담고 있습니다.
 
-```
+```java
 package info.m2sj.springrouterdatasource;
 
 import org.springframework.boot.SpringApplication;
